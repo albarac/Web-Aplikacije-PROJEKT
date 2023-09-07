@@ -23,10 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
     app.post('/register',async(req,res)=>{
       const newUser = {
-        Username: req.body.Username,
-        Email:req.body.Email,
-        Password: bcrypt.hashSync(req.body.Password, 10),
-        Image: req.body.Image,
+        Username: req.body.username,
+        Email:req.body.email,
+        Password: bcrypt.hashSync(req.body.password, 10),
+        Image: req.body.image,
       }
       let check= await db.collection("Users").find({Email:newUser.Email}).count()
       if(check > 0){
@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
     app.post('/login',async(req,res)=>{
       try {
-        const user = await db.collection("Users").findOne({ Email: req.body.Email });
+        const user = await db.collection("Users").findOne({ Email: req.body.email });
       
         if (!user) {
           return res.json({
@@ -49,13 +49,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
           });
         }
       
-        if (!bcrypt.compareSync(req.body.Password, user.Password)) {
+        if (!bcrypt.compareSync(req.body.password, user.Password)) {
           return res.json({
             error: 'Invalid password!'
           });
         }
       
-        const token = jwt.sign({ userId: user._id }, 'secretkey');
+        const token = jwt.sign({ userId: user._id }, 'secretkey', {
+          algorithm: 'HS512',
+          expiresIn: '1 week',
+          });
         return res.json({
           title: 'Login Success!',
           token: token,
@@ -72,8 +75,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/user", async (req, res) => {
   try {
     const token = req.headers.token;
-
-    // Verify the JWT token
+      // Verify the JWT token
     jwt.verify(token, 'secretKey', async (err, decoded) => {
       if (err) {
         return res.status(401).json({
@@ -83,7 +85,6 @@ app.get("/user", async (req, res) => {
 
       console.log("Decoded:", decoded);
 
-      // Assuming "db" is a reference to your MongoDB database
       const user = await db.collection("Users").findOne({ _id: mongo.ObjectId(decoded.userId) });
 
       if (!user) {

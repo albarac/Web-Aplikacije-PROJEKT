@@ -54,10 +54,10 @@ export default {
         register() {
             if (this.password == this.confirmpass && this.password.length > 6) {
                 let newUser = {
-                    Username: this.username,
-                    Email: this.email,
-                    Password: this.password,
-                    Image: this.image,
+                    username: this.username,
+                    email: this.email,
+                    password: this.password,
+                    image: this.image,
                 }
                 console.log(newUser)
 

@@ -38,8 +38,8 @@ export default {
     methods: {
         login() {
             let user = {
-                Email: this.email,
-                Password: this.password
+                email: this.email,
+                password: this.password
             }
             axios.post('http://localhost:9000/login', user)
                 .then(res => {
