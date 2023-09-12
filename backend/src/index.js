@@ -1,5 +1,5 @@
 import express from "express";
-import { MongoClient } from "mongodb";
+import mongo from "mongodb";
 import cors from "cors";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 (async () => {
   try {
-    const client = await MongoClient.connect(url);
+    const client = await mongo.MongoClient.connect(url);
     console.log('Connected successfully to MongoDB server');
     const db = client.db('Masterbase');
 
@@ -55,7 +55,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
           });
         }
       
-        const token = jwt.sign({ userId: user._id }, 'secretkey', {
+        const token = jwt.sign({ userId: user._id }, 'key', {
           algorithm: 'HS512',
           expiresIn: '1 week',
           });
@@ -76,7 +76,7 @@ app.get("/user", async (req, res) => {
   try {
     const token = req.headers.token;
       // Verify the JWT token
-    jwt.verify(token, 'secretKey', async (err, decoded) => {
+    jwt.verify(token, 'key', async (err, decoded) => {
       if (err) {
         return res.status(401).json({
           status: 'Unauthorized!'
@@ -85,7 +85,7 @@ app.get("/user", async (req, res) => {
 
       console.log("Decoded:", decoded);
 
-      const user = await db.collection("Users").findOne({ _id: mongo.ObjectId(decoded.userId) });
+      const user = await db.collection("Users").findOne({ _id: new mongo.ObjectId(decoded.userId) });
 
       if (!user) {
         return res.status(404).json({
