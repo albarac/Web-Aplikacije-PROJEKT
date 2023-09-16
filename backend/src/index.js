@@ -112,7 +112,44 @@ app.get("/user", async (req, res) => {
 });
 
 
-    app.listen(port, () => console.log(`Listening on port ${port}!`));
+app.post("/newPost",async(req,res)=>{
+  console.log("Received Post data!")
+  let data = req.body
+  let result = await db.collection("Posts").insertOne(data)
+  res.json(result)
+})
+
+app.post("/newComment",async(req,res)=>{
+  console.log("Received comment data!")
+  let comment = req.body
+  console.log(comment)
+  let result = await db.collection("Comments").insertOne(comment)
+  res.json(result)
+})
+
+
+app.get("/GetComments/:id",async(req,res)=>{
+  let id = req.params.id
+  let result = await db.collection("Comments").find({postId:id}).toArray();
+  res.json(result)
+})
+
+
+app.get("/getPosts", async (req, res) => {
+  let cursor = await db.collection("Posts").find().sort({ Date: -1 })
+  let results = await cursor.toArray();
+  res.json(results)
+})
+
+
+app.get("/getPost/:id", async (req, res) => {
+  let id = req.params.id
+  let data = await db.collection("Posts").findOne({_id:new mongo.ObjectId(id)})
+  res.json(data)
+})
+
+
+    app.listen(port, () => console.log(`Listening on port ˛${port}!`));
   } catch (err) {
     console.log('Error occurred while connecting to MongoDB:', err);
   }

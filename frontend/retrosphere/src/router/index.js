@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import Post from '../views/Post.vue'
+import Details from '../views/Details.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,12 @@ const routes = [
     path: '/post',
     name: 'post',
     component: Post
+  },
+  {
+    path: '/details/:id',
+    props:true,
+    name: 'details',
+    component: Details
   },
 ]
 

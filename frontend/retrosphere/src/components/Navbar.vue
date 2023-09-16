@@ -1,31 +1,39 @@
 <template>
-    <nav id="navbar" class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3"
+        v-if="$route.path !== '/login' && $route.path !== '/register'">
         <div class="container-fluid">
-            <router-link v-if="$route.path !== '/login' && $route.path !== '/register'" id="router-link" to="/">
-                <h6>Home</h6>
-            </router-link>
-            <router-link v-if="$route.path !== '/login' && $route.path !== '/register'" id="router-link" to="/post">
-                <h6>Post</h6>
-            </router-link>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-            <router-link v-if="$route.path !== '/login' && $route.path !== '/register'" id="router-link" to="/login">
-                <h6>Logout</h6>
-            </router-link>
+            <a class="navbar-brand" href="#">Retrosphere</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <input class="form-control" placeholder="search bar" type="text" id="search" />
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item ">
+                        <router-link to="/" class="nav-link">Home</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/post" class="nav-link">Posts</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/settings" class="nav-link">Settings</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/login" class="nav-link">Logout</router-link>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 </template>
-
+  
+  
 <style lang="scss" scoped>
-#navbar {
-    background-color: rgb(107, 95, 90);
-}
-
-#router-link {
-    color: black;
-    font-size: 20px;
-    text-decoration: none;
+#search {
+    width: 300px;
+    margin-left: 50px;
 }
 </style>

@@ -1,50 +1,39 @@
 <template>
   <div class="home">
     <div class="row">
-      <div class="col">
+      <div class="col"></div>
+      <div class="col-md-8">
+
+        <Card :key="card.id" v-bind:info="card" v-for="card in store.posts" />
 
       </div>
-      <div class="col">
-        <div class="forum">
-          <p id="title">
-            title
-          </p>
-          <p id="user">
-            username
-          </p>
-          <p id="date">
-            dateposted
-          </p>
-          <p id="reply">
-            replies
-          </p>
-
-        </div>
-      </div>
-      <div class="col">
-
-      </div>
-
+      <div class="col"></div>
     </div>
   </div>
 </template>
 
+
 <script>
-import axios from 'axios';
-import store from '../store';
+import axios from "axios";
+import store from "../store";
+import Card from "../components/Card.vue"
 export default {
+  components: {
+    Card,
+  },
   data() {
     return {
-      store
-    }
+      store,
+    };
   },
   mounted() {
     this.getData();
+    this.getPosts();
   },
   methods: {
     getData() {
       if (localStorage.getItem("token") == null) {
-        console.log("Unauthorized!")
+        console.log("Unauthorized!");
       } else {
         axios
           .get("http://localhost:9000/user", {
@@ -57,9 +46,18 @@ export default {
             store.id = res.data.user.id;
           });
       }
-    }
-  }
-}
+      console.log("Store: ", store)
+    },
+    getPosts() {
+      axios.get("http://localhost:9000/getPosts").then((res) => {
+        console.log("Response Posts: ", res.data);
+        let data = res.data;
+        console.log("Data: ", data)
+        store.posts = data;
+      });
+    },
+  },
+};
 </script>
 
 
@@ -67,28 +65,5 @@ export default {
 .home {
   margin: 30px;
   padding: 30px;
-}
-
-.forum {
-  display: flex;
-  padding: 10px;
-  background-color: chartreuse;
-}
-
-#title {
-  margin-right: 30px;
-}
-
-#user {
-  margin-right: 30px;
-
-}
-
-#date {
-  margin-right: 30px;
-}
-
-#reply {
-  margin-right: 30px;
 }
 </style>
